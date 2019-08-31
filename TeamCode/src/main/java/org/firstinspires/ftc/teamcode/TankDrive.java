@@ -29,20 +29,32 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareH_Drive;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group="Iterative Opmode")
-@Disabled
+//@Disabled
 public class TeleOp extends OpMode
 {
     // Declare OpMode members.
-    HardwareH_Drive robot   = new HardwareH_Drive();
+    private HardwareH_Drive robot   = new HardwareH_Drive();
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime cycleTime = new ElapsedTime();
 
+    private static final double ACCELERATION = 0.01;   // amount to ramp motor each cycle
+    private static final int    CYCLE_MS  =   50;   // period of each cycle
+    private double              speedMultiplier;
+
+    private double leftPowerCurrent;
+    private double rightPowerCurrent;
+//    private boolean aWasPressed;
+//    private boolean bWasPressed;
+//    private boolean xWasPressed;
+//    private boolean yWasPressed;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -50,6 +62,13 @@ public class TeleOp extends OpMode
     public void init() {
         telemetry.addData("Status", "Initializing");
         robot.init(hardwareMap);
+        leftPowerCurrent = 0;
+        rightPowerCurrent = 0;
+//        aWasPressed = false;
+//        bWasPressed = false;
+//        xWasPressed = false;
+//        yWasPressed = false;
+        speedMultiplier = 0.5;
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -68,6 +87,7 @@ public class TeleOp extends OpMode
     @Override
     public void start() {
         runtime.reset();
+        cycleTime.reset();
     }
 
     /*
@@ -75,8 +95,46 @@ public class TeleOp extends OpMode
      */
     @Override
     public void loop() {
+        // control wheelpower with acceleration
+        if (cycleTime.milliseconds() > CYCLE_MS) {
+            double leftPowerTarget = Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1, 1);
+            double rightPowerTarget = Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1, 1);
 
-        // Show the elapsed game time and wheel power.
+            if (leftPowerTarget > leftPowerCurrent) {
+                leftPowerCurrent = Range.clip(leftPowerCurrent + ACCELERATION, -1, leftPowerTarget);
+                robot.leftDrive.setPower(speedMultiplier * leftPowerCurrent);
+            }
+            else if (leftPowerTarget < leftPowerCurrent) {
+                leftPowerCurrent = Range.clip(leftPowerCurrent - ACCELERATION, leftPowerTarget, 1);
+                robot.leftDrive.setPower(speedMultiplier * leftPowerCurrent);
+            }
+            else {
+                robot.leftDrive.setPower(speedMultiplier * leftPowerCurrent);
+            }
+
+            if (rightPowerTarget > rightPowerCurrent) {
+                rightPowerCurrent = Range.clip(rightPowerCurrent + ACCELERATION, -1, rightPowerTarget);
+                robot.rightDrive.setPower(speedMultiplier * rightPowerCurrent);
+            }
+            else if (rightPowerTarget < rightPowerCurrent) {
+                rightPowerCurrent = Range.clip(rightPowerCurrent - ACCELERATION, rightPowerTarget, 1);
+                robot.rightDrive.setPower(speedMultiplier * rightPowerCurrent);
+            }
+            else {
+                robot.rightDrive.setPower(speedMultiplier * rightPowerCurrent);
+            }
+
+
+            cycleTime.reset();
+        }
+
+        if (gamepad1.a) {
+            speedMultiplier = 0.5;
+        }
+        if (gamepad1.y) {
+            speedMultiplier = 1;
+        }
+
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
@@ -85,12 +143,5 @@ public class TeleOp extends OpMode
      */
     @Override
     public void stop() {
-    }
-
-    private int stickAngle() {
-        double stickX = gamepad1.left_stick_x;
-        double stickY = -gamepad1.left_stick_y;
-
-
     }
 }
