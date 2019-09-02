@@ -31,22 +31,21 @@ package org.firstinspires.ftc.teamcode;
 
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareH_Drive;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group="Iterative Opmode")
-//@Disabled
-public class TeleOp extends OpMode
-{
+@TeleOp(name="TankDrive", group="Iterative Opmode")
+public class TankDrive extends OpMode {
     // Declare OpMode members.
     private HardwareH_Drive robot   = new HardwareH_Drive();
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime cycleTime = new ElapsedTime();
 
-    private static final double ACCELERATION = 0.01;   // amount to ramp motor each cycle
-    private static final int    CYCLE_MS  =   50;   // period of each cycle
+    private static final double ACCELERATION = 0.08;   // amount to ramp motor each cycle
+    private static final int    CYCLE_MS  =   40;   // period of each cycle
     private double              speedMultiplier;
 
     private double leftPowerCurrent;
