@@ -77,8 +77,8 @@ public class HardwareH_Drive
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         midDrive   = hwMap.get(DcMotor.class, "mid_drive");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         midDrive.setDirection(DcMotor.Direction.FORWARD);
 
         leftDrive.setPower(0);
@@ -94,7 +94,7 @@ public class HardwareH_Drive
         midDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void move(int heading, int speed, int distance) {
+    public void move(double heading, int speed, int distance) {
         // Input any number 0-359 as a heading in degrees going clockwise with 0 being straight
         // forwards. Then give a speed and a distance. The function will calculate what speeds to
         // give the wheels. If distance is 0, the robot will just run at the right speed indefinitely.

@@ -123,7 +123,6 @@ public class TankDrive extends OpMode {
                 robot.rightDrive.setPower(speedMultiplier * rightPowerCurrent);
             }
 
-
             cycleTime.reset();
         }
 
@@ -135,6 +134,7 @@ public class TankDrive extends OpMode {
         }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Speed", speedMultiplier);
     }
 
     /*
