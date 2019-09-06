@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class HDrive {
     private DcMotor leftDrive;
     private DcMotor rightDrive;
@@ -42,6 +44,13 @@ public class HDrive {
         leftPowerCurrent = 0;
         rightPowerCurrent = 0;
         midPowerCurrent = 0;
+    }
+
+    public void reportEncoders(Telemetry telemetry) {
+        telemetry.addData("encoders", "%d, %d, %d, %d",
+                leftDrive.getCurrentPosition(),
+                rightDrive.getCurrentPosition(),
+                midDrive.getCurrentPosition());
     }
 
     public void drive(double forwardSpeed, double rightSpeed, double rotateSpeed) {
@@ -86,5 +95,7 @@ public class HDrive {
             }
         }
     }
+
+
 
 }
