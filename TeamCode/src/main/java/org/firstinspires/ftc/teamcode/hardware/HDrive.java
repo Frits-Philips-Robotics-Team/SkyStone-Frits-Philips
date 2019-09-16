@@ -14,7 +14,7 @@ public class HDrive {
     private DcMotor midDrive;
     private ElapsedTime cycleTime = new ElapsedTime();
 
-    private static final int CYCLE_MS = 30;
+    private static final int CYCLE_MS = 40;
     private double maxSpeed;
     private double increment;
 
@@ -31,16 +31,16 @@ public class HDrive {
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         midDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
         midDrive.setDirection(DcMotor.Direction.FORWARD);
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         midDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        maxSpeed = 0.7;
-        increment = 0.08;
+        maxSpeed = 1;
+        increment = 0.06;
         leftPowerCurrent = 0;
         rightPowerCurrent = 0;
         midPowerCurrent = 0;
@@ -54,8 +54,8 @@ public class HDrive {
     }
 
     public void drive(double forwardSpeed, double strafeSpeed, double rotateSpeed) {
-        double LDriveSpeed = Range.clip(forwardSpeed + rotateSpeed, -maxSpeed, maxSpeed);
-        double RDriveSpeed = Range.clip(forwardSpeed - rotateSpeed, -maxSpeed, maxSpeed);
+        double LDriveSpeed = Range.clip(forwardSpeed - rotateSpeed, -maxSpeed, maxSpeed);
+        double RDriveSpeed = Range.clip(forwardSpeed + rotateSpeed, -maxSpeed, maxSpeed);
         double midDriveSpeed = Range.clip(strafeSpeed, -maxSpeed, maxSpeed);
 
         accelToSpeed(LDriveSpeed, RDriveSpeed, midDriveSpeed);
@@ -96,7 +96,7 @@ public class HDrive {
             } else if (midDriveSpeed > midPowerCurrent) {
                 midPowerCurrent = Range.clip(midPowerCurrent + increment, -1, midDriveSpeed);
                 midDrive.setPower(maxSpeed * midPowerCurrent);
-            } else if (RDriveSpeed < midPowerCurrent) {
+            } else if (midDriveSpeed < midPowerCurrent) {
                 midPowerCurrent = Range.clip(midPowerCurrent - increment, midDriveSpeed, 1);
                 midDrive.setPower(maxSpeed * midPowerCurrent);
             } else {
@@ -105,6 +105,8 @@ public class HDrive {
         }
     }
 
-
+    public void setSpeed(double value) {
+        maxSpeed = value;
+    }
 
 }

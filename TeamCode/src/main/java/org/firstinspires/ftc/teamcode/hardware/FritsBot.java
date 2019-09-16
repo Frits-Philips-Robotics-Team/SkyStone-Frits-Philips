@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 public class FritsBot {
-    HDrive drivetrain = new HDrive();
+    public HDrive drivetrain = new HDrive();
 //    private BNO055IMU imu;
 
     public void init(HardwareMap hwMap) {

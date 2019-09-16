@@ -71,6 +71,13 @@ public class SimpleTeleOp extends OpMode
     public void loop() {
         robot.driveSimple(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
+        if(gamepad1.a) {
+            robot.drivetrain.setSpeed(0.6);
+        }
+        if(gamepad1.y) {
+            robot.drivetrain.setSpeed(1);
+        }
+        
         // Show the elapsed game time
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
